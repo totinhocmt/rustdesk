@@ -9,7 +9,7 @@ use hbb_common::{
 };
 use serde_derive::{Deserialize, Serialize};
 
-#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
+#[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
 pub struct CustomServer {
     #[serde(default)]
     pub key: String,
@@ -19,17 +19,6 @@ pub struct CustomServer {
     pub api: String,
     #[serde(default)]
     pub relay: String,
-}
-
-impl Default for CustomServer {
-    fn default() -> Self {
-        Self {
-            host: "toteftp.homeip.net".to_string(),
-            relay: "toteftp.homeip.net".to_string(),
-            key: "ihrdzIju9rYUaa7qH2SaLPYqUnjhLTbBaZxh1YsdrfI=".to_string(),
-            api: String::new(),
-        }
-    }
 }
 
 fn get_custom_server_from_config_string(s: &str) -> ResultType<CustomServer> {
