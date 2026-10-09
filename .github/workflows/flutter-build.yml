@@ -147,6 +147,74 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Configurar servidor Tote
+        shell: pwsh
+        env:
+          TOTE_SERVER: ${{ secrets.TOTE_SERVER }}
+          TOTE_PUBLIC_KEY: ${{ secrets.TOTE_PUBLIC_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:TOTE_SERVER) -or
+              [string]::IsNullOrWhiteSpace($env:TOTE_PUBLIC_KEY)) {
+            throw "Segredos TOTE_SERVER ou TOTE_PUBLIC_KEY ausentes."
+          }
+
+          $arquivo = "libs/hbb_common/src/config.rs"
+
+          if (-not (Test-Path $arquivo)) {
+            throw "Arquivo de configuracao nao encontrado."
+          }
+
+          $conteudo = Get-Content $arquivo -Raw
+
+          $padraoServidor = '(?m)^pub const RENDEZVOUS_SERVERS: &\[&str\] = &\[[^\r\n]*\];'
+          $padraoChave = '(?m)^pub const RS_PUB_KEY: &str = "[^"]*";'
+
+          if (-not [regex]::IsMatch($conteudo, $padraoServidor)) {
+            throw "Constante RENDEZVOUS_SERVERS nao encontrada."
+          }
+
+          if (-not [regex]::IsMatch($conteudo, $padraoChave)) {
+            throw "Constante RS_PUB_KEY nao encontrada."
+          }
+
+          $servidor = $env:TOTE_SERVER.Trim()
+          $chave = $env:TOTE_PUBLIC_KEY.Trim()
+
+          if ($servidor -notmatch '^[a-zA-Z0-9.-]+$') {
+            throw "Formato de servidor invalido."
+          }
+
+          if ($chave -notmatch '^[A-Za-z0-9+/]{43}=$') {
+            throw "Formato de chave publica invalido."
+          }
+
+          $novaLinhaServidor = 'pub const RENDEZVOUS_SERVERS: &[&str] = &["' + $servidor + '"];'
+          $novaLinhaChave = 'pub const RS_PUB_KEY: &str = "' + $chave + '";'
+
+          $conteudo = [regex]::Replace(
+            $conteudo, $padraoServidor,
+            [System.Text.RegularExpressions.MatchEvaluator]{
+              param($m)
+              $novaLinhaServidor
+            }
+          )
+
+          $conteudo = [regex]::Replace(
+            $conteudo, $padraoChave,
+            [System.Text.RegularExpressions.MatchEvaluator]{
+              param($m)
+              $novaLinhaChave
+            }
+          )
+
+          [System.IO.File]::WriteAllText(
+            (Join-Path (Get-Location) $arquivo),
+            $conteudo,
+            [System.Text.UTF8Encoding]::new($false)
+          )
+
+          Write-Host "Configuracao do servidor aplicada com sucesso."
+
       - name: Restore bridge files
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
