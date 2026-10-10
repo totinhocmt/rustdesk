@@ -1,4 +1,4 @@
-name: Full Flutter CI
+name: ToteDesk - Build Manual
 
 on:
   workflow_dispatch:
@@ -12,3 +12,4 @@ jobs:
     secrets: inherit
     with:
       upload-artifact: true
+      upload-tag: "v1.26.22"
