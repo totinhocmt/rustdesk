@@ -34,8 +34,8 @@ This file contains the declaration of all the localizable strings.
 	<String Id="F_Server" Value="Server" />
 	<String Id="F_Server_Desc" Value="The server part of RustDesk. Provides the MediaLibrary and other services." />
 
-	<String Id="Service_DisplayName" Value="RustDesk Service" />
-	<String Id="Service_Description" Value="This service runs the RustDesk Server." />
+	<String Id="Service_DisplayName" Value="ToteDesk Service" />
+	<String Id="Service_Description" Value="Este servico roda o ToteDesk Server." />
 
 	<!-- Launch Conditions -->
 	<String Id="LC_OS" Value="[ProductName] requires minimum Windows 7 / 2008 R2 as operating system." />
