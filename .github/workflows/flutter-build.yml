@@ -169,6 +169,19 @@ jobs:
           $padraoServidor = '(?m)^pub const RENDEZVOUS_SERVERS: &\[&str\] = &\[[^\r\n]*\];'
           $padraoChave = '(?m)^pub const RS_PUB_KEY: &str = "[^"]*";'
 
+          $padraoNome = 'pub static ref APP_NAME: RwLock<String> = RwLock::new("RustDesk".to_owned());'
+
+          if (-not $conteudo.Contains($padraoNome)) {
+            throw "Definicao de APP_NAME nao encontrada."
+          }
+
+          $conteudo = $conteudo.Replace(
+            $padraoNome,
+            'pub static ref APP_NAME: RwLock<String> = RwLock::new("ToteDesk".to_owned());'
+          )
+
+
+
           if (-not [regex]::IsMatch($conteudo, $padraoServidor)) {
             throw "Constante RENDEZVOUS_SERVERS nao encontrada."
           }
