@@ -21,7 +21,7 @@
 		<CustomAction Id="LaunchApp" ExeCommand="" Return="asyncNoWait" FileRef="App.exe" />
 		<CustomAction Id="LaunchAppTray" ExeCommand=" --tray" Return="asyncNoWait" FileRef="App.exe" />
 		<Property Id="TerminateProcesses" Value="AppTest.exe" />
-		<CustomAction Id="TerminateProcesses.SetParam" Return="check" Property="TerminateProcesses" Value="$(var.Product).exe" />
+		<CustomAction Id="TerminateProcesses.SetParam" Return="check" Property="TerminateProcesses" Value="$(var.ProductLower).exe" />
 		<CustomAction Id="TerminateBrokers.SetParam" Return="check" Property="TerminateProcesses" Value="RuntimeBroker_rustdesk.exe" />
 		<CustomAction Id="SetPropertyIsServiceRunning.SetParam.AppName" Return="check" Property="AppName" Value="$(var.Product)" />
 		<CustomAction Id="SetPropertyIsServiceRunning.SetParam.PropertyName" Return="check" Property="PropertyName" Value="STOP_SERVICE" />
