@@ -461,7 +461,7 @@ def prepare_resources():
 
 
 def init_global_vars(dist_dir, app_name, args):
-    dist_app = dist_dir.joinpath(app_name + ".exe")
+    dist_app = dist_dir.joinpath(app_name.lower() + ".exe")
 
     def read_process_output(args):
         process = subprocess.Popen(
